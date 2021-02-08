@@ -10,6 +10,8 @@ led4 = LED(6)
 ldr = LightSensor(21)
 button = Button(20)
 
+global current_state = "ready"
+
 def ledAllOn():
    # while True:
         led1.on()
@@ -50,16 +52,25 @@ def ldr_sense():
     else:
         ledLDR()
     
+def button_check():
+    button.hold_time = 2;
+    if button.is_held:
+        current_state = "surveillence"
+
 def surveillence_check():
     ledSequence()
     #print("Press Button for 2 secs to enter Surveillence Mode")
     
+def state_ready():
+    ldr_sense()
+    button_check()
+
+def state_surveillence():
+    ledSequence()
 
 if __name__ == "__main__":
     while True:
-        ldr_sense()
-        #button.when_pressed = surveillence_check()
-        button.hold_time = 2;
-        if button.is_held:
-            surveillence_check()
-            button.
+        if(current_state == "ready"):
+            state_ready()
+        elif(current_state == "surveillence"):
+            state_surveillence()
